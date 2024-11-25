@@ -3,30 +3,24 @@ org: taisgrupo6unsa
 # "app" enables Serverless Framework Dashboard features and sharing them with other Services.
 app: taisgrupo6examen2
 # "service" is the name of this project. This will also be added to your AWS resource names.
-service: register
+service: auth
 
 stages:
   default:
     params:
-      tableName: "products-table-${sls:stage}"
+      tableName: "users-table-${sls:stage}"
 
 plugins:
   - serverless-wsgi
   - serverless-python-requirements
 
 custom:
-  tableName: 'products-table-${self:provider.stage}'
   wsgi:
     app: app.app
-    packRequirements: false
-  pythonRequirements:
-    dockerizePip: non-linux
 
 provider:
   name: aws
   runtime: python3.12
-  stage: dev
-  region: us-east-1
   iam:
     role:
       statements:
@@ -38,33 +32,32 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-            - lambda:InvokeFunction
           Resource:
-            - Fn::GetAtt: [ProductsTable, Arn]
-            - "*"
+            - Fn::GetAtt: [UsersTable, Arn]
   environment:
-    PRODUCTS_TABLE: ${param:tableName}
-    LAMBDA_NAME: validate-${self:provider.stage}-validateProduct
+    USERS_TABLE: ${param:tableName}
 
 functions:
-  createProduct:
+  api:
     handler: wsgi_handler.handler
     events:
       - http:
-          path: /products
-          method: POST
+          path: /
+          method: ANY
+      - http:
+          path: /{proxy+}
+          method: ANY
 
-  
 resources:
   Resources:
-    ProductsTable:
+    UsersTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: product_id
+          - AttributeName: userId
             AttributeType: S
         KeySchema:
-          - AttributeName: product_id
+          - AttributeName: userId
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1

@@ -67,7 +67,7 @@ def create_products():
 
     if validation_response == 0:
         return jsonify({'error': body_dict}), 400
-    
+
     if validation_response.get('statusCode') != 200:
         return jsonify({'error': body_dict}), validation_response.get('statusCode')
 
