@@ -1,10 +1,9 @@
+""" Validate the product data """
+
+
 import os
-
+import json
 import boto3
-from flask import Flask, jsonify, make_response, request
-
-app = Flask(__name__)
-
 
 dynamodb_client = boto3.client('dynamodb')
 
@@ -12,39 +11,40 @@ if os.environ.get('IS_OFFLINE'):
     dynamodb_client = boto3.client(
         'dynamodb', region_name='localhost', endpoint_url='http://localhost:8000'
     )
+else:
+    dynamodb_client = boto3.client('dynamodb')
 
+PRODUCTS_TABLE = os.environ['PRODUCTS_TABLE']
 
-USERS_TABLE = os.environ['USERS_TABLE']
+def handler(event, context):
+    """
+    Lambda function to validate product input.
+    @param event: AWS Lambda input event
+    @return: Validation response
+    """
 
+    event = json.loads(event['body'])
+    product_id = event.get('product_id')
 
-@app.route('/users/<string:user_id>')
-def get_user(user_id):
-    result = dynamodb_client.get_item(
-        TableName=USERS_TABLE, Key={'userId': {'S': user_id}}
-    )
-    item = result.get('Item')
-    if not item:
-        return jsonify({'error': 'Could not find user with provided "userId"'}), 404
+    if not product_id:
+        return {
+            'statusCode': 400,
+            'body': json.dumps({'message': 'Missing product_id'})
+        }
 
-    return jsonify(
-        {'userId': item.get('userId').get('S'), 'name': item.get('name').get('S')}
-    )
-
-
-@app.route('/users', methods=['POST'])
-def create_user():
-    user_id = request.json.get('userId')
-    name = request.json.get('name')
-    if not user_id or not name:
-        return jsonify({'error': 'Please provide both "userId" and "name"'}), 400
-
-    dynamodb_client.put_item(
-        TableName=USERS_TABLE, Item={'userId': {'S': user_id}, 'name': {'S': name}}
+    # Consultar DynamoDB
+    response = dynamodb_client.get_item(
+        TableName=PRODUCTS_TABLE,
+        Key={'product_id': {'S': product_id}}
     )
 
-    return jsonify({'userId': user_id, 'name': name})
+    if "Item" in response:
+        return {
+            'statusCode': 409,
+            'body': json.dumps({'message': 'Product already exists'})
+        }
 
-
-@app.errorhandler(404)
-def resource_not_found(e):
-    return make_response(jsonify(error='Not found!'), 404)
+    return {
+        'statusCode': 200,
+        'body': json.dumps({'message': 'Validation successful'})
+    }
