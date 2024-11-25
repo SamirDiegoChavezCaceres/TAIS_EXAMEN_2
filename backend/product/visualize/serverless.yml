@@ -47,9 +47,11 @@ functions:
       - http:
           path: /products/{proxy+}
           method: GET
+          cors: true
   getAllProducts:
     handler: wsgi_handler.handler
     events:
       - http: 
           path: /products
           method: GET
+          cors: true
