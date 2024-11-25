@@ -47,3 +47,9 @@ functions:
       - http:
           path: /products/{proxy+}
           method: GET
+  getAllProducts:
+    handler: wsgi_handler.handler
+    events:
+      - http: 
+          path: /products
+          method: GET

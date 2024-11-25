@@ -43,6 +43,27 @@ def get_products(product_id):
         }
     )
 
+@app.route('/products')
+def get_all_products():
+    """ Get all products in the database"""
+    result = dynamodb_client.scan(TableName=PRODUCTS_TABLE)
+    items = result.get('Items')
+    return jsonify(
+        {
+            'products': [
+                {
+                    'product_id': item.get('product_id').get('S'),
+                    'name': item.get('name').get('S'),
+                    "description": item.get('description').get('S'),
+                    "quantity": int(item.get('quantity').get('N')),
+                    "price": float(item.get('price').get('N')),
+                    "category": item.get('category').get('S')
+                }
+                for item in items
+            ]
+        }
+    )
+
 @app.errorhandler(404)
 def resource_not_found(e):
     """ Error handler for 404
