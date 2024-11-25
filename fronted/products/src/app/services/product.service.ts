@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ProductService {
 
-  API_URL: string = 'https://k9dxp7tom8.execute-api.us-east-1.amazonaws.com/dev/products';
+  API_URL: string = 'https://lbgs9booc7.execute-api.us-east-1.amazonaws.com/dev/products';
   constructor(private httpClient: HttpClient) { }
     
   getProducts(): Observable<any> {
