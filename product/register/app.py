@@ -1,12 +1,40 @@
-import os
+""" This module contains the Flask application that registers a product"""
 
+
+import os
 import boto3
+import json
 from flask import Flask, jsonify, make_response, request
+
 
 app = Flask(__name__)
 
-
 dynamodb_client = boto3.client('dynamodb')
+lambda_client = boto3.client('lambda')
+
+def invoke_lambda(product_id):
+    """ Invoke the lambda function
+    @return: JSON object with the response from the lambda function
+    @param: product_id
+    """
+    payload = {
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": json.dumps({"product_id": product_id})
+    }
+    params = {
+        'FunctionName': os.environ['LAMBDA_NAME'],
+        'InvocationType': 'RequestResponse',
+        'Payload': json.dumps(payload)
+    }
+    try :
+        response = lambda_client.invoke(**params)
+        response_payload = json.loads(response['Payload'].read())
+        return response_payload
+
+    except Exception as e:
+        return 0
 
 if os.environ.get('IS_OFFLINE'):
     dynamodb_client = boto3.client(
@@ -21,37 +49,52 @@ PRODUCTS_TABLE = os.environ['PRODUCTS_TABLE']
 def create_products():
     """ Create a new product
     @return: JSON object with the product created
-    @param: productId, name, description, quantity, price, category
+    @param: product_id, name, description, quantity, price, category
     """
-    product_id = request.json.get('productId')
+    product_id = request.json.get('product_id')
     name = request.json.get('name')
     description = request.json.get('description')
     quantity = request.json.get('quantity')
     price = request.json.get('price')
     category = request.json.get('category')
+
     if not product_id or not name:
         return jsonify({'error': 'Please provide both "product_id" and "name"'}), 400
+
+    validation_response = invoke_lambda(product_id)
+
+    body_dict = json.loads(validation_response.get('body'))
+
+    if validation_response == 0:
+        return jsonify({'error': body_dict}), 400
+    
+    if validation_response.get('statusCode') != 200:
+        return jsonify({'error': body_dict}), validation_response.get('statusCode')
 
     dynamodb_client.put_item(
         TableName=PRODUCTS_TABLE,
         Item={
-            'productId': {'S': product_id},
+            'product_id': {'S': product_id},
             'name': {'S': name},
-            "description": {'S': description},
-            "quantity": {'N': str(quantity)},
-            "price": {'N': str(price)},
-            "category": {'S': category}
+            'description': {'S': description},
+            'quantity': {'N': str(quantity)},
+            'price': {'N': str(price)},
+            'category': {'S': category}
         }
     )
-
-    return jsonify({
-        'product_id': product_id,
-        'name': name,
-        'description': description,
-        'quantity': quantity,
-        'price': price,
-        'category': category
-        })
+    return jsonify(
+        {
+            "message": body_dict.get('message'),
+            "product": {
+                'product_id': product_id,
+                'name': name,
+                'description': description,
+                'quantity': quantity,
+                'price': price,
+                'category': category
+            }
+        }
+    )
 
 @app.errorhandler(404)
 def resource_not_found(e):
