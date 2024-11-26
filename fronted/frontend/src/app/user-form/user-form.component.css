@@ -1,0 +1,42 @@
+:root {
+    --primary-color: #b0d0bb; /* Color principal */
+    --secondary-color: #758f9c; /* Color de texto y bordes */
+    --header-bg-color: #b2d5db; /* Fondo del encabezado */
+    --row-bg-color: #d9e7e8; /* Fondo de los inputs */
+    --table-bg-color: #fafaf0; /* Fondo general */
+  }
+  
+  
+  input {
+    background-color: var(--row-bg-color);
+    border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px var(--primary-color);
+  }
+  
+  button.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  button.btn-primary:hover {
+    background-color: var(--header-bg-color);
+    border-color: var(--header-bg-color);
+  }
+  
+  button.btn-secondary {
+    background-color: var(--row-bg-color);
+    color: var(--secondary-color);
+    border-color: var(--secondary-color);
+  }
+  
+  button.btn-secondary:hover {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
