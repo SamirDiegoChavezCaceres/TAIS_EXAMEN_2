@@ -5,14 +5,14 @@
     <table *ngIf="hasUsers()" class="table table-bordered table-hover inventory-table">
       <thead class="thead-dark">
         <tr>
-          <th>Nombre</th>
-          <th>Correo</th>
+          <th>ID</th>
+          <th>Username</th>
         </tr>
       </thead>
       <tbody>
         @for (item of userList; track $index) {
         <tr>
-          <td>{{ item.userId }}</td>
+          <td>{{ item.userId | slice:0:8 }}</td>
           <td>{{ item.name }}</td>
         </tr>
       }

@@ -9,15 +9,18 @@ import { ProductInterface } from '../interfaces/product.interface';
 })
 export class ProductService {
   //API_URL: string = 'https://dummyjson.com/products/';
-  API_URL: string = 'https://0f7ttojh76.execute-api.us-east-1.amazonaws.com/dev/products';
+  GET_ID = "0f7ttojh76"
+  POST_ID = "ou4attuxfl"
+  GET_URL: string = 'https://'+this.GET_ID+'.execute-api.us-east-1.amazonaws.com/dev/products';
+  POST_URL: string = 'https://'+this.POST_ID+'.execute-api.us-east-1.amazonaws.com/dev/products';
   constructor(private httpClient: HttpClient) { }
 
   getProducts(): Observable<any> {
-    return this.httpClient.get(this.API_URL).pipe(res => res);
+    return this.httpClient.get(this.GET_URL).pipe(res => res);
   }
 
   // Agregar producto
   addProduct(product: ProductInterface): Observable<ProductInterface> {
-    return this.httpClient.post<ProductInterface>(this.API_URL, product);
+    return this.httpClient.post<ProductInterface>(this.POST_URL, product);
   }
 }

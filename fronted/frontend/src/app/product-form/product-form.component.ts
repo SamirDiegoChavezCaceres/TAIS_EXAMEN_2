@@ -16,7 +16,6 @@ import { ProductService } from '../services/product.service';
 
 export class ProductFormComponent implements OnInit {
   
-  productList: ProductInterface[] = [];
   constructor(private productService: ProductService, private router: Router) { }
   
   // Producto actual para el formulario
@@ -30,47 +29,26 @@ export class ProductFormComponent implements OnInit {
   };
 
   isLoading: boolean = false;
-  errorMessage: string | null = null;
 
   ngOnInit(): void {
-    this.getProducts();
   }
 
-  getProducts() {
-    this.productService.getProducts().subscribe({
-      next: (result) => {
-        this.productList = result.products;
-      },
-      error: (error) => {
-        console.error(error);
-      }
-    });
-  }
-
-  isCodeUnique(): boolean {
-    return !this.productList.some((p) => p.product_id === this.product.product_id);
-  }
+ 
 
   // Método para enviar el formulario
   onSubmit(): void {
     // Verificar si el código ya existe
-    if (!this.isCodeUnique()) {
-      this.errorMessage = 'El ID del producto ya está registrado.';
-      return;
-    }
 
     this.isLoading = true;
-    this.errorMessage = null;
 
     this.productService.addProduct(this.product).subscribe({
-      next: (newProduct) => {
-        this.productList.push(newProduct);
+      next: () => {
         alert('Producto registrado correctamente');
         this.router.navigate(['/home']);
       },
       error: (error) => {
-        console.error('Error al registrar producto:', error);
-        this.errorMessage = 'No se pudo registrar el producto.';
+        console.error('Error al registrar producto:', error.error.error);
+        alert('Ya existe un producto con el mismo código.');
       },
       complete: () => {
         this.isLoading = false;
