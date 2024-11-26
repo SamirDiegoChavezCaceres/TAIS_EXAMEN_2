@@ -1,5 +1,15 @@
 <div class="container-fluid">
-    <button class="btn btn-primary position-absolute top-0 end-0 mt-4 me-4" (click)="handleAddProduct()">Agregar producto</button>
-    <app-inventory-table></app-inventory-table>
+  <div class="d-flex justify-content-start align-items-center p-3">
+    <button class="btn btn-primary me-3" (click)="handleAddProduct()">
+      Agregar producto
+    </button>
+    <button class="btn btn-primary me-3" (click)="handleListUsers()">
+      Listar Usuarios
+    </button>
+    <button class="btn btn-primary" (click)="handleListUsers()">
+      Log Out
+    </button>
   </div>
+  <app-inventory-table></app-inventory-table>
+</div>
   

@@ -14,4 +14,7 @@ export class HomeComponent {
   handleAddProduct() : void{
     this.router.navigate(['/home/agregarProducto']);
   }
+  handleListUsers() : void{
+    this.router.navigate(['/home/listarUsuarios']);
+  }
 }

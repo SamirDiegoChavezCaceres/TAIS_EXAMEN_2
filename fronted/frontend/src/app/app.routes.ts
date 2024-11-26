@@ -3,6 +3,7 @@ import { SimpleLoginComponent } from './simple-login/simple-login.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { HomeComponent } from './home/home.component';
 import { ProductFormComponent } from './product-form/product-form.component';
+import { UserTableComponent } from './user-table/user-table.component';
 
 export const routes: Routes = [
     {
@@ -25,6 +26,10 @@ export const routes: Routes = [
     {
         path: 'home/agregarProducto',
         component: ProductFormComponent
+    },
+    {
+        path: "home/listarUsuarios",
+        component: UserTableComponent
     },
     {
         path: '**', 

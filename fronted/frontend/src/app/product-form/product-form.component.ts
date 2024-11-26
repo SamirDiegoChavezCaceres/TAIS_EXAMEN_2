@@ -89,4 +89,8 @@ export class ProductFormComponent implements OnInit {
       quantity: 0,
     };
   }
+
+  handleHome(): void {
+    this.router.navigate(['/home']);
+  }
 }

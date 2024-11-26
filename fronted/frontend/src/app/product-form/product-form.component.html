@@ -1,7 +1,8 @@
-<div class="full-screen">
+
+<div class="full-screen" style="margin-bottom: 100px;">
   <div class="container mt-5">
     <h2 class="text-center mb-4">Registrar Producto</h2>
-  
+    
     <!-- Formulario -->
     <form (ngSubmit)="onSubmit()" #productForm="ngForm" class="shadow-lg p-4 rounded">
       <div class="mb-3">
@@ -80,6 +81,9 @@
           (click)="onReset()">
           Limpiar
         </button>
+        <div>
+          <button class="btn btn-secondary" (click)="handleHome()">Cancelar</button>
+        </div> 
       </div>
     </form>
   </div>  

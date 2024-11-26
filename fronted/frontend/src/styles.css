@@ -8,14 +8,7 @@
 }
 
 /* Centrar contenido en toda la pantalla */
-.full-screen {
-  height: 100vh; /* Ocupa toda la pantalla */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--table-bg-color); /* Fondo general */
-  margin: 0;
-}
+
 
 
 h2 {
