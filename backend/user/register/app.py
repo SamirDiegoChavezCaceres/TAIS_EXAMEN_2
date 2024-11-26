@@ -40,40 +40,40 @@ def create_user():
 
     return jsonify({'userId': user_id, 'name': name, 'password': password, 'email': email})
 
-@app.route('/users/<string:user_id>')
-def get_user(user_id):
-    result = dynamodb_client.get_item(
-        TableName=USERS_TABLE, Key={'userId': {'S': user_id}}
-    )
-    item = result.get('Item')
-    if not item:
-        return jsonify({'error': 'Could not find user with provided "userId"'}), 404
+# @app.route('/users/<string:user_id>')
+# def get_user(user_id):
+#     result = dynamodb_client.get_item(
+#         TableName=USERS_TABLE, Key={'userId': {'S': user_id}}
+#     )
+#     item = result.get('Item')
+#     if not item:
+#         return jsonify({'error': 'Could not find user with provided "userId"'}), 404
 
-    return jsonify(
-        {
-            'userId': item.get('userId').get('S'),
-            'name': item.get('name').get('S'),
-            "password": item.get('password').get('S'),
-            "email": item.get('email').get('S')
-        }
-    )
+#     return jsonify(
+#         {
+#             'userId': item.get('userId').get('S'),
+#             'name': item.get('name').get('S'),
+#             "password": item.get('password').get('S'),
+#             "email": item.get('email').get('S')
+#         }
+#     )
 
-@app.route("/users", methods=["GET"])
-def get_all_users():
-    result = dynamodb_client.scan(TableName=USERS_TABLE)
-    items = result.get('Items')
-    return jsonify(
-        {
-            'users': [
-                {
-                    'userId': item.get('userId').get('S'),
-                    'name': item.get('name').get('S'),
-                    "password": item.get('password').get('S'),
-                    "email": item.get('email').get('S')
-                } for item in items
-            ]
-        }
-    )
+# @app.route("/users", methods=["GET"])
+# def get_all_users():
+#     result = dynamodb_client.scan(TableName=USERS_TABLE)
+#     items = result.get('Items')
+#     return jsonify(
+#         {
+#             'users': [
+#                 {
+#                     'userId': item.get('userId').get('S'),
+#                     'name': item.get('name').get('S'),
+#                     "password": item.get('password').get('S'),
+#                     "email": item.get('email').get('S')
+#                 } for item in items
+#             ]
+#         }
+#     )
 
 @app.errorhandler(404)
 def resource_not_found(e):

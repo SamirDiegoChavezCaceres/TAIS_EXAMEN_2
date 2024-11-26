@@ -3,7 +3,7 @@ org: taisgrupo6unsa
 # "app" enables Serverless Framework Dashboard features and sharing them with other Services.
 app: taisgrupo6examen2
 # "service" is the name of this project. This will also be added to your AWS resource names.
-service: visualize
+service: visualize-user
 
 stages:
   default:
@@ -25,6 +25,7 @@ custom:
 provider:
   name: aws
   runtime: python3.12
+  apiName: ${self:provider.stage}-user-${self:service}-api
   stage: dev
   region: us-east-1
   iam:

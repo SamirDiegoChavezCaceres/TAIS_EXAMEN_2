@@ -53,20 +53,20 @@ functions:
           path: /users
           method: POST
           cors: true
-  getUser:
-    handler: wsgi_handler.handler
-    events:
-      - http:
-          path: /users/{proxy+}
-          method: GET
-          cors: true
-  getAllUsers:
-    handler: wsgi_handler.handler
-    events:
-      - http: 
-          path: /users
-          method: GET
-          cors: true
+  # getUser:
+  #   handler: wsgi_handler.handler
+  #   events:
+  #     - http:
+  #         path: /users/{proxy+}
+  #         method: GET
+  #         cors: true
+  # getAllUsers:
+  #   handler: wsgi_handler.handler
+  #   events:
+  #     - http: 
+  #         path: /users
+  #         method: GET
+  #         cors: true
 
 resources:
   Resources:

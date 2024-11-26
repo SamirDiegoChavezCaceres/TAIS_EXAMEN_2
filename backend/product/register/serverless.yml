@@ -55,20 +55,20 @@ functions:
           path: /products
           method: POST
           cors: true
-  getProduct:
-    handler: wsgi_handler.handler
-    events:
-      - http:
-          path: /products/{proxy+}
-          method: GET
-          cors: true
-  getAllProducts:
-    handler: wsgi_handler.handler
-    events:
-      - http: 
-          path: /products
-          method: GET
-          cors: true
+  # getProduct:
+  #   handler: wsgi_handler.handler
+  #   events:
+  #     - http:
+  #         path: /products/{proxy+}
+  #         method: GET
+  #         cors: true
+  # getAllProducts:
+  #   handler: wsgi_handler.handler
+  #   events:
+  #     - http: 
+  #         path: /products
+  #         method: GET
+  #         cors: true
 
 
 resources:
