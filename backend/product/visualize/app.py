@@ -7,7 +7,6 @@ from flask import Flask, jsonify, make_response, request
 
 from flask_cors import CORS, cross_origin
 
-
 app = Flask(__name__)
 CORS(app) # allow CORS for all domains on all routes.
 dynamodb_client = boto3.client('dynamodb')
