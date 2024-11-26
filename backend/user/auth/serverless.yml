@@ -42,8 +42,11 @@ functions:
     handler: wsgi_handler.handler
     events:
       - http:
-          path: /
-          method: ANY
+          path: users
+          method: POST
+      - http:
+          path: users/{userId}
+          method: GET
       - http:
           path: /{proxy+}
           method: ANY
