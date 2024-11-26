@@ -9,12 +9,21 @@ import { FormsModule } from '@angular/forms';
   imports: [FormsModule]
 })
 export class SimpleLoginComponent {
-  user = { username: '', password: '' };
+
+  constructor() { }
+
+  user = { 
+    userId: '',
+    username: '', 
+    password: '' ,
+    email: '',
+  };
 
   // Simula el inicio de sesión
   onSubmit() {
+    const id = crypto.randomUUID();
     if (this.user.username && this.user.password) {
-      alert(`Bienvenido, ${this.user.username}!`);
+      alert(`Bienvenido, ${this.user.username} \n${id.substring(0, 8)}!`);
     } else {
       alert('Por favor, completa todos los campos.');
     }
