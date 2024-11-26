@@ -1,0 +1,27 @@
+<!-- inventory-table.component.html -->
+<div class="container mt-5">
+    <h1 class="text-center">Inventario</h1>
+    <table class="table table-bordered table-hover inventory-table">
+      <thead class="thead-dark">
+        <tr>
+          <th>Código</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Cantidad</th>
+          <th>Precio Unitario</th>
+          <th>Categoría</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of inventory">
+          <td>{{ item.codigo }}</td>
+          <td>{{ item.nombre }}</td>
+          <td>{{ item.descripcion }}</td>
+          <td>{{ item.cantidad }}</td>
+          <td>{{ item.precio }}</td>
+          <td>{{ item.categoria }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

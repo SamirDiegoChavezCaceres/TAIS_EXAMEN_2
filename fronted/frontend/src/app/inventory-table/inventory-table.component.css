@@ -1,0 +1,38 @@
+/* styles.css */
+:root {
+    --primary-color: #b0d0bb;
+    --secondary-color: #758f9c;
+    --header-bg-color: #b2d5db;
+    --row-bg-color: #d9e7e8;
+    --table-bg-color: #fafaf0;
+}
+
+.table {
+    background-color: var(--table-bg-color);
+    border: 1px solid var(--secondary-color);
+}
+
+.table thead {
+    background-color: var(--header-bg-color);
+    color: var(--secondary-color);
+}
+
+.table tbody tr:nth-child(odd) {
+    background-color: var(--row-bg-color);
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: var(--table-bg-color);
+}
+
+.table tbody tr:hover {
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+}
+
+.table td, .table th {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--secondary-color);
+}
