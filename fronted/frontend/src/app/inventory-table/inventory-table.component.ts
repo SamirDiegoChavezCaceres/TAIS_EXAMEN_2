@@ -1,7 +1,7 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { catchError, of } from 'rxjs';
+import { ProductInterface } from '../interfaces/product.interface';
+
 
 interface InventoryItem {
   product_id: string;
@@ -33,12 +33,12 @@ export class InventoryTableComponent implements OnInit {
   // Computed signal para verificar si hay datos
   hasInventory = computed(() => this.inventory().length > 0);
 
-  constructor(private http: HttpClient) {}
+  productList: ProductInterface[] = [];
+  constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
-    this.loadInventory();
+    this.getProducts();
   }
-
   loadInventory(): void {
     this.http.get<ApiResponse>(this.apiUrl).pipe(
       catchError(err => {
@@ -51,16 +51,7 @@ export class InventoryTableComponent implements OnInit {
       this.isLoading.set(false);
     });
   }
-
-  // inventory = [
-  //   { codigo: '001', nombre: 'Laptop', descripcion: 'Computadora portátil de 15 pulgadas', cantidad: 20, precio: 700, categoria: 'Electrónica' },
-  //   { codigo: '002', nombre: 'Mouse', descripcion: 'Mouse inalámbrico', cantidad: 50, precio: 25, categoria: 'Accesorios' },
-  //   { codigo: '003', nombre: 'Teclado', descripcion: 'Teclado mecánico', cantidad: 30, precio: 50, categoria: 'Accesorios' },
-  //   { codigo: '001', nombre: 'Laptop', descripcion: 'Computadora portátil de 15 pulgadas', cantidad: 20, precio: 700, categoria: 'Electrónica' },
-  //   { codigo: '002', nombre: 'Mouse', descripcion: 'Mouse inalámbrico', cantidad: 50, precio: 25, categoria: 'Accesorios' },
-  //   { codigo: '003', nombre: 'Teclado', descripcion: 'Teclado mecánico', cantidad: 30, precio: 50, categoria: 'Accesorios' },
-  //   { codigo: '001', nombre: 'Laptop', descripcion: 'Computadora portátil de 15 pulgadas', cantidad: 20, precio: 700, categoria: 'Electrónica' },
-  //   { codigo: '002', nombre: 'Mouse', descripcion: 'Mouse inalámbrico', cantidad: 50, precio: 25, categoria: 'Accesorios' },
-  //   { codigo: '003', nombre: 'Teclado', descripcion: 'Teclado mecánico', cantidad: 30, precio: 50, categoria: 'Accesorios' }
-  // ];
+  hasProducts(): boolean {
+    return this.productList.length > 0;
+  }
 }

@@ -1,18 +1,10 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { catchError, of } from 'rxjs';
+import { ProductInterface } from '../interfaces/product.interface';
+import { ProductService } from '../services/product.service';
 
-interface Product {
-  code: string;
-  name: string;
-  description: string;
-  quantity: number;
-  unitPrice: number;
-  category: string;
-}
 
 @Component({
   selector: 'app-product-form',
@@ -21,112 +13,80 @@ interface Product {
   standalone: true,
   imports: [FormsModule, CommonModule]
 })
+
 export class ProductFormComponent implements OnInit {
-  // URL base de la API (reemplazar con tu URL real)
-  private apiUrl = 'https://tu-api.com/productos';
-
-  // Signals para manejar el estado
-  products = signal<Product[]>([]);
-  isLoading = signal(false);
-  error = signal<string | null>(null);
-
+  
+  productList: ProductInterface[] = [];
+  constructor(private productService: ProductService, private router: Router) { }
+  
   // Producto actual para el formulario
-  product = signal<Product>({
-    code: '',
+  product: ProductInterface = {
+    product_id: '',
     name: '',
     description: '',
     quantity: 0,
-    unitPrice: 0,
-    category: ''
-  });
+    price: 0,
+    category: '',
+  };
 
-  // Computed signal para verificar si el código ya existe
-  isCodeUnique = computed(() => 
-    !this.products().some(p => p.code === this.product().code)
-  );
-
-  constructor(
-    private http: HttpClient, 
-    private router: Router
-  ) {}
+  isLoading: boolean = false;
+  errorMessage: string | null = null;
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.getProducts();
   }
 
-  // Cargar productos existentes
-  loadProducts(): void {
-    this.isLoading.set(true);
-    this.error.set(null);
-
-    this.http.get<Product[]>(this.apiUrl).pipe(
-      catchError(err => {
-        this.error.set('No se pudieron cargar los productos');
-        console.error(err);
-        return of([]);
-      })
-    ).subscribe(data => {
-      this.products.set(data);
-      this.isLoading.set(false);
+  getProducts() {
+    this.productService.getProducts().subscribe({
+      next: (result) => {
+        this.productList = result.products;
+      },
+      error: (error) => {
+        console.error(error);
+      }
     });
+  }
+
+  isCodeUnique(): boolean {
+    return !this.productList.some((p) => p.product_id === this.product.product_id);
   }
 
   // Método para enviar el formulario
   onSubmit(): void {
     // Verificar si el código ya existe
     if (!this.isCodeUnique()) {
-      this.error.set('El código de producto ya está registrado');
+      this.errorMessage = 'El ID del producto ya está registrado.';
       return;
     }
 
-    // Preparar datos del producto
-    const newProduct = this.product();
+    this.isLoading = true;
+    this.errorMessage = null;
 
-    // Iniciar carga
-    this.isLoading.set(true);
-    this.error.set(null);
-
-    // Enviar producto
-    this.http.post<Product>(this.apiUrl, newProduct).pipe(
-      catchError(err => {
-        this.error.set('No se pudo registrar el producto');
-        console.error(err);
-        this.isLoading.set(false);
-        return of(null);
-      })
-    ).subscribe(response => {
-      if (response) {
-        // Actualizar lista de productos
-        this.products.update(products => [...products, response]);
-        
-        // Mensaje de éxito
+    this.productService.addProduct(this.product).subscribe({
+      next: (newProduct) => {
+        this.productList.push(newProduct);
         alert('Producto registrado correctamente');
-        
-        // Navegar a home
         this.router.navigate(['/home']);
-      }
-      this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error al registrar producto:', error);
+        this.errorMessage = 'No se pudo registrar el producto.';
+      },
+      complete: () => {
+        this.isLoading = false;
+      },
     });
-  }
-
-  // Método para actualizar el producto
-  updateProduct(field: keyof Product, value: any): void {
-    this.product.update(current => ({
-      ...current,
-      [field]: value
-    }));
   }
 
   // Método para limpiar el formulario
   onReset(): void {
-    this.product.set({
-      code: '',
-      name: '',
+    this.product = {
+      product_id: '',
       description: '',
+      name: '',
+      price: 0,
+      category: '',
       quantity: 0,
-      unitPrice: 0,
-      category: ''
-    });
-    this.error.set(null);
+    };
   }
 }
