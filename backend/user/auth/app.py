@@ -27,23 +27,36 @@ def get_user(user_id):
         return jsonify({'error': 'Could not find user with provided "userId"'}), 404
 
     return jsonify(
-        {'userId': item.get('userId').get('S'), 'name': item.get('name').get('S')}
-    )
+        {
+            'userId': item.get('userId').get('S'),
+            'username': item.get('username').get('S'),
+            'password': item.get('password').get('S')
+        },
 
+    )
 
 @app.route('/users', methods=['POST'])
 def create_user():
     user_id = request.json.get('userId')
-    name = request.json.get('name')
-    if not user_id or not name:
-        return jsonify({'error': 'Please provide both "userId" and "name"'}), 400
+    username = request.json.get('username')
+    password = request.json.get('password')
+    if not user_id or not username or not password:
+        return jsonify({'error': 'Please provide "userId" | "name" | "password"'}), 400
 
     dynamodb_client.put_item(
-        TableName=USERS_TABLE, Item={'userId': {'S': user_id}, 'name': {'S': name}}
+        TableName=USERS_TABLE,
+        Item={
+            'userId': {'S': user_id},
+            'username': {'S': username},
+            'password': {'S': password}
+            }
     )
 
-    return jsonify({'userId': user_id, 'name': name})
-
+    return jsonify({
+        'userId': user_id,
+        'username': username,
+        'password': password
+        })
 
 @app.errorhandler(404)
 def resource_not_found(e):
