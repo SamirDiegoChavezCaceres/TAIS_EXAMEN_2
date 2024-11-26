@@ -12,7 +12,7 @@ export class AuthService {
   isLoggedIn: boolean = false;
 
   login(userDetails: { username: string; password: string }): Observable<boolean> {
-    
+    // revisar esto
     this.isLoggedIn = true;
     
     return this.http.post<any>('http://examples/api/login', userDetails)
@@ -24,8 +24,9 @@ export class AuthService {
         }),
         catchError(error => {
           console.log(error);
+          // revisar esto
           // this.isLoggedIn = false;
-          return of(true);
+          return of(false);
         })
       );
   }
@@ -36,6 +37,8 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
+    // revisar esto
+    this.isLoggedIn = true
     return this.isLoggedIn;
   }
 }
