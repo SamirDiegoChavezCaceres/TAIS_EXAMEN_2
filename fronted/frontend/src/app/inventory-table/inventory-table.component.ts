@@ -4,12 +4,15 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
 
 interface InventoryItem {
-  codigo: string;
-  nombre: string;
-  descripcion: string;
-  cantidad: number;
-  precio: number;
-  categoria: string;
+  product_id: string;
+  description: string;
+  name: string;
+  price: number;
+  category: string;
+  quantity: number;
+}
+interface ApiResponse {
+  products: InventoryItem[];
 }
 @Component({
   selector: 'app-inventory-table',
@@ -20,7 +23,7 @@ interface InventoryItem {
 })
 
 export class InventoryTableComponent implements OnInit {
-  private apiUrl = 'https://tu-api.com/inventario';
+  private apiUrl = 'https://0f7ttojh76.execute-api.us-east-1.amazonaws.com/dev/products';
 
   // Signals para manejar el estado
   inventory = signal<InventoryItem[]>([]);
@@ -37,14 +40,14 @@ export class InventoryTableComponent implements OnInit {
   }
 
   loadInventory(): void {
-    this.http.get<InventoryItem[]>(this.apiUrl).pipe(
+    this.http.get<ApiResponse>(this.apiUrl).pipe(
       catchError(err => {
         this.error.set('No se pudieron cargar los datos del inventario');
         console.error('Error loading inventory', err);
-        return of([]);
+        return of({ products: [] });  // Devuelves un objeto con products vacío en caso de error
       })
-    ).subscribe(data => {
-      this.inventory.set(data);
+    ).subscribe(response => {
+      this.inventory.set(response.products);  // Accedes a la propiedad 'products' del objeto
       this.isLoading.set(false);
     });
   }
