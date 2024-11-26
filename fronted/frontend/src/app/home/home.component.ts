@@ -17,4 +17,7 @@ export class HomeComponent {
   handleListUsers() : void{
     this.router.navigate(['/home/listarUsuarios']);
   }
+  handleLogOut() : void{
+    this.router.navigate(['/login']);
+  }
 }

@@ -1,7 +1,8 @@
 <div class="full-screen">
-    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-      <h2>Registro</h2>
-      <p></p>
+  <div class="container mt-5 min-vh-0" style="max-width: 400px;">
+  <h2 class="text-center mb-4">Registrarse</h2>
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="shadow-lg p-4 rounded">
+
       <div class="mb-3">
         <label for="username" class="form-label">Correo</label>
         <input
@@ -45,4 +46,5 @@
       </div>
     </form>
   </div>
+</div>
   
