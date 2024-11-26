@@ -36,8 +36,12 @@ provider:
             - Fn::GetAtt: [UsersTable, Arn]
   environment:
     USERS_TABLE: ${param:tableName}
+    JWT_SECRET_KEY: fdelgadov
 
 functions:
+  auth:
+    handler: authorizer.lambda_handler
+
   api:
     handler: wsgi_handler.handler
     events:
@@ -47,6 +51,7 @@ functions:
       - http:
           path: users/{userId}
           method: GET
+          authorizer: auth
       - http:
           path: /{proxy+}
           method: ANY
