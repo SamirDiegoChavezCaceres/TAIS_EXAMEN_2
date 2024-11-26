@@ -1,54 +1,34 @@
-<!-- inventory-table.component.html -->
 <div class="container mt-5">
   <h1 class="text-center">Inventario</h1>
 
-  <!-- Indicador de carga -->
-  @if (isLoading()) {
-    <div class="text-center">
-      <p>Cargando inventario...</p>
-      <!-- Puedes agregar un spinner aquí -->
-    </div>
-  }
-
-  <!-- Mensaje de error -->
-  @if (error()) {
-    <div class="alert alert-danger">
-      {{ error() }}
-    </div>
-  }
-
   <!-- Tabla de inventario -->
-  @if (hasInventory()) {
-    <table class="table table-bordered table-hover inventory-table">
-      <thead class="thead-dark">
-        <tr>
-          <th>Código</th>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Cantidad</th>
-          <th>Precio Unitario</th>
-          <th>Categoría</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of inventory(); track item.codigo) {
-          <tr>
-            <td>{{ item.codigo }}</td>
-            <td>{{ item.nombre }}</td>
-            <td>{{ item.descripcion }}</td>
-            <td>{{ item.cantidad }}</td>
-            <td>{{ item.precio | currency:'USD' }}</td>
-            <td>{{ item.categoria }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  }
+  <table *ngIf="hasProducts()" class="table table-bordered table-hover inventory-table">
+    <thead class="thead-dark">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>Categoría</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of productList; track $index) {
+      <tr>
+        <td>{{ item.product_id }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.price | currency: 'USD' }}</td>
+        <td>{{ item.category }}</td>
+      </tr>
+    }
+    </tbody>
+  </table>
 
   <!-- Mensaje cuando no hay inventario -->
-  @if (!hasInventory() && !isLoading() && !error()) {
-    <div class="alert alert-info">
-      No hay elementos en el inventario.
-    </div>
-  }
+  <div *ngIf="!hasProducts()" class="alert alert-info">
+    No hay elementos en el inventario.
+  </div>
 </div>

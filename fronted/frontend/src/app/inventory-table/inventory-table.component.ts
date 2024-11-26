@@ -1,16 +1,8 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { catchError, of } from 'rxjs';
+import { ProductInterface } from '../interfaces/product.interface';
+import { ProductService } from '../services/product.service';
 
-interface InventoryItem {
-  codigo: string;
-  nombre: string;
-  descripcion: string;
-  cantidad: number;
-  precio: number;
-  categoria: string;
-}
 @Component({
   selector: 'app-inventory-table',
   templateUrl: './inventory-table.component.html',
@@ -20,44 +12,24 @@ interface InventoryItem {
 })
 
 export class InventoryTableComponent implements OnInit {
-  private apiUrl = 'https://tu-api.com/inventario';
 
-  // Signals para manejar el estado
-  inventory = signal<InventoryItem[]>([]);
-  isLoading = signal(true);
-  error = signal<string | null>(null);
-
-  // Computed signal para verificar si hay datos
-  hasInventory = computed(() => this.inventory().length > 0);
-
-  constructor(private http: HttpClient) {}
+  productList: ProductInterface[] = [];
+  constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
-    this.loadInventory();
+    this.getProducts();
   }
-
-  loadInventory(): void {
-    this.http.get<InventoryItem[]>(this.apiUrl).pipe(
-      catchError(err => {
-        this.error.set('No se pudieron cargar los datos del inventario');
-        console.error('Error loading inventory', err);
-        return of([]);
-      })
-    ).subscribe(data => {
-      this.inventory.set(data);
-      this.isLoading.set(false);
+  getProducts() {
+    this.productService.getProducts().subscribe({
+      next: (result) => {
+        this.productList = result.products;
+      },
+      error: (error) => {
+        console.error(error);
+      }
     });
   }
-
-  // inventory = [
-  //   { codigo: '001', nombre: 'Laptop', descripcion: 'Computadora portátil de 15 pulgadas', cantidad: 20, precio: 700, categoria: 'Electrónica' },
-  //   { codigo: '002', nombre: 'Mouse', descripcion: 'Mouse inalámbrico', cantidad: 50, precio: 25, categoria: 'Accesorios' },
-  //   { codigo: '003', nombre: 'Teclado', descripcion: 'Teclado mecánico', cantidad: 30, precio: 50, categoria: 'Accesorios' },
-  //   { codigo: '001', nombre: 'Laptop', descripcion: 'Computadora portátil de 15 pulgadas', cantidad: 20, precio: 700, categoria: 'Electrónica' },
-  //   { codigo: '002', nombre: 'Mouse', descripcion: 'Mouse inalámbrico', cantidad: 50, precio: 25, categoria: 'Accesorios' },
-  //   { codigo: '003', nombre: 'Teclado', descripcion: 'Teclado mecánico', cantidad: 30, precio: 50, categoria: 'Accesorios' },
-  //   { codigo: '001', nombre: 'Laptop', descripcion: 'Computadora portátil de 15 pulgadas', cantidad: 20, precio: 700, categoria: 'Electrónica' },
-  //   { codigo: '002', nombre: 'Mouse', descripcion: 'Mouse inalámbrico', cantidad: 50, precio: 25, categoria: 'Accesorios' },
-  //   { codigo: '003', nombre: 'Teclado', descripcion: 'Teclado mecánico', cantidad: 30, precio: 50, categoria: 'Accesorios' }
-  // ];
+  hasProducts(): boolean {
+    return this.productList.length > 0;
+  }
 }
