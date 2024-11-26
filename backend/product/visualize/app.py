@@ -6,8 +6,6 @@ import boto3
 from flask import Flask, jsonify, make_response, request
 
 from flask_cors import CORS, cross_origin
-from flask_httpauth import HTTPBasicAuth
-auth = HTTPBasicAuth()
 
 app = Flask(__name__)
 CORS(app) # allow CORS for all domains on all routes.
