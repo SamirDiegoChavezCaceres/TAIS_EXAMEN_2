@@ -34,6 +34,7 @@ provider:
             - dynamodb:DeleteItem
           Resource:
             - Fn::GetAtt: [UsersTable, Arn]
+            - arn:aws:dynamodb:us-east-1:590183672359:table/employee-users-table-dev/index/UsernameIndex
   environment:
     USERS_TABLE: ${param:tableName}
     JWT_SECRET_KEY: fdelgadov
@@ -45,6 +46,9 @@ functions:
   api:
     handler: wsgi_handler.handler
     events:
+      - http:
+          path: login
+          method: POST
       - http:
           path: users
           method: POST
