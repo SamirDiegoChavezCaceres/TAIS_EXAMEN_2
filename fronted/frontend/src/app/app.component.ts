@@ -12,7 +12,6 @@ import { UserFormComponent } from "./user-form/user-form.component";
   standalone: true,
 // <<<<<<< bootstrap
 //   imports: [RouterOutlet, SimpleLoginComponent, ProductFormComponent, InventoryTableComponent, ProductComponent],
-=======
   imports: [RouterOutlet, SimpleLoginComponent, ProductFormComponent, InventoryTableComponent, UserFormComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
