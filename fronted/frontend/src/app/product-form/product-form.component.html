@@ -1,106 +1,137 @@
 <div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
   <div class="w-100" style="max-width: 600px;">
     <h2 class="text-center mb-4">Registrar Producto</h2>
+   
+    <!-- Mensaje de error -->
+    @if (error()) {
+      <div class="alert alert-danger">
+        {{ error() }}
+      </div>
+    }
+
+    <!-- Indicador de carga -->
+    @if (isLoading()) {
+      <div class="text-center">
+        <p>Cargando... Por favor espere</p>
+      </div>
+    }
 
     <!-- Formulario de Producto -->
-    <form #productForm="ngForm" (ngSubmit)="onSubmit()" class="shadow-lg p-4 rounded-3 bg-white">
-      
-      <!-- Campo de Código -->
-      <div class="mb-3">
-        <label for="code" class="form-label">Código</label>
-        <input
-          type="text"
-          id="code"
-          name="code"
-          class="form-control"
-          [(ngModel)]="product.code"
-          #code="ngModel"
-          required
-        />
-      </div>
+    @if (!isLoading()) {
+      <form (ngSubmit)="onSubmit()" class="shadow-lg p-4 rounded">
+        
+        <!-- Campo de Código -->
+        <div class="mb-3">
+          <label for="code" class="form-label">Código</label>
+          <input
+            type="text"
+            id="code"
+            name="code"
+            class="form-control"
+            [ngModel]="product().code"
+            (ngModelChange)="updateProduct('code', $event)"
+            required
+          />
+          @if (!isCodeUnique()) {
+            <div class="text-danger">
+              El código ya está registrado
+            </div>
+          }
+        </div>
 
-      <!-- Campo de Nombre -->
-      <div class="mb-3">
-        <label for="name" class="form-label">Nombre</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          class="form-control"
-          [(ngModel)]="product.name"
-          #name="ngModel"
-          required
-        />
-      </div>
+        <!-- Campo de Nombre -->
+        <div class="mb-3">
+          <label for="name" class="form-label">Nombre</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="form-control"
+            [ngModel]="product().name"
+            (ngModelChange)="updateProduct('name', $event)"
+            required
+          />
+        </div>
 
-      <!-- Campo de Descripción -->
-      <div class="mb-3">
-        <label for="description" class="form-label">Descripción</label>
-        <textarea
-          id="description"
-          name="description"
-          class="form-control"
-          [(ngModel)]="product.description"
-          #description="ngModel"
-          required
-        ></textarea>
-      </div>
+        <!-- Campo de Descripción -->
+        <div class="mb-3">
+          <label for="description" class="form-label">Descripción</label>
+          <textarea
+            id="description"
+            name="description"
+            class="form-control"
+            [ngModel]="product().description"
+            (ngModelChange)="updateProduct('description', $event)"
+            required
+          ></textarea>
+        </div>
 
-      <!-- Campo de Cantidad -->
-      <div class="mb-3">
-        <label for="quantity" class="form-label">Cantidad</label>
-        <input
-          type="number"
-          id="quantity"
-          name="quantity"
-          class="form-control"
-          [(ngModel)]="product.quantity"
-          #quantity="ngModel"
-          required
-        />
-      </div>
+        <!-- Campo de Cantidad -->
+        <div class="mb-3">
+          <label for="quantity" class="form-label">Cantidad</label>
+          <input
+            type="number"
+            id="quantity"
+            name="quantity"
+            class="form-control"
+            [ngModel]="product().quantity"
+            (ngModelChange)="updateProduct('quantity', $event)"
+            required
+          />
+        </div>
 
-      <!-- Campo de Precio Unitario -->
-      <div class="mb-3">
-        <label for="unitPrice" class="form-label">Precio Unitario</label>
-        <input
-          type="number"
-          id="unitPrice"
-          name="unitPrice"
-          class="form-control"
-          [(ngModel)]="product.unitPrice"
-          #unitPrice="ngModel"
-          required
-        />
-      </div>
+        <!-- Campo de Precio Unitario -->
+        <div class="mb-3">
+          <label for="unitPrice" class="form-label">Precio Unitario</label>
+          <input
+            type="number"
+            id="unitPrice"
+            name="unitPrice"
+            class="form-control"
+            [ngModel]="product().unitPrice"
+            (ngModelChange)="updateProduct('unitPrice', $event)"
+            required
+          />
+        </div>
 
-      <!-- Campo de Categoría -->
-      <div class="mb-3">
-        <label for="category" class="form-label">Categoría</label>
-        <select
-          id="category"
-          name="category"
-          class="form-select"
-          [(ngModel)]="product.category"
-          #category="ngModel"
-          required
-        >
-          <option value="" disabled>Seleccione una categoría</option>
-          <option value="electronics">Electrónica</option>
-          <option value="furniture">Muebles</option>
-          <option value="clothing">Ropa</option>
-        </select>
-      </div>
+        <!-- Campo de Categoría -->
+        <div class="mb-3">
+          <label for="category" class="form-label">Categoría</label>
+          <input
+            type="text"
+            id="category"
+            name="category"
+            class="form-control"
+            [ngModel]="product().category"
+            (ngModelChange)="updateProduct('category', $event)"
+            required
+          />
+        </div>
 
-      <!-- Botón para Enviar -->
-      <div class="d-flex justify-content-between">
-        <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">
-          Registrar Producto
-        </button>
-        <button type="button" class="btn btn-secondary" (click)="onReset()">
-          Limpiar
-        </button>
-      </div>
-    </form>
+        <!-- Botones -->
+        <div class="d-flex justify-content-between">
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            [disabled]="!isCodeUnique() || 
+                       !product().code || 
+                       !product().name || 
+                       !product().description || 
+                       !product().quantity || 
+                       !product().unitPrice || 
+                       !product().category"
+          >
+            Registrar Producto
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-secondary" 
+            (click)="onReset()"
+          >
+            Limpiar
+          </button>
+        </div>
+      </form>
+    }
   </div>
 </div>

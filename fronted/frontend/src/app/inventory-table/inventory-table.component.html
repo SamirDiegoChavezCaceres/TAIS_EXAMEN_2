@@ -1,6 +1,24 @@
 <!-- inventory-table.component.html -->
 <div class="container mt-5">
-    <h1 class="text-center">Inventario</h1>
+  <h1 class="text-center">Inventario</h1>
+
+  <!-- Indicador de carga -->
+  @if (isLoading()) {
+    <div class="text-center">
+      <p>Cargando inventario...</p>
+      <!-- Puedes agregar un spinner aquí -->
+    </div>
+  }
+
+  <!-- Mensaje de error -->
+  @if (error()) {
+    <div class="alert alert-danger">
+      {{ error() }}
+    </div>
+  }
+
+  <!-- Tabla de inventario -->
+  @if (hasInventory()) {
     <table class="table table-bordered table-hover inventory-table">
       <thead class="thead-dark">
         <tr>
@@ -13,15 +31,24 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of inventory">
-          <td>{{ item.codigo }}</td>
-          <td>{{ item.nombre }}</td>
-          <td>{{ item.descripcion }}</td>
-          <td>{{ item.cantidad }}</td>
-          <td>{{ item.precio }}</td>
-          <td>{{ item.categoria }}</td>
-        </tr>
+        @for (item of inventory(); track item.codigo) {
+          <tr>
+            <td>{{ item.codigo }}</td>
+            <td>{{ item.nombre }}</td>
+            <td>{{ item.descripcion }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>{{ item.precio | currency:'USD' }}</td>
+            <td>{{ item.categoria }}</td>
+          </tr>
+        }
       </tbody>
     </table>
-  </div>
-  
+  }
+
+  <!-- Mensaje cuando no hay inventario -->
+  @if (!hasInventory() && !isLoading() && !error()) {
+    <div class="alert alert-info">
+      No hay elementos en el inventario.
+    </div>
+  }
+</div>
