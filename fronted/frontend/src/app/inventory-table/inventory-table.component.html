@@ -2,7 +2,6 @@
   <h1 class="text-center">Inventario</h1>
 
   <!-- Tabla de inventario -->
-<!-- <<<<<<< rutas
   <table *ngIf="hasProducts()" class="table table-bordered table-hover inventory-table">
     <thead class="thead-dark">
       <tr>
@@ -27,33 +26,6 @@
     }
     </tbody>
   </table>
-======= -->
-  @if (hasInventory()) {
-    <table class="table table-bordered table-hover inventory-table">
-      <thead class="thead-dark">
-        <tr>
-          <th>Código</th>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Cantidad</th>
-          <th>Precio Unitario</th>
-          <th>Categoría</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of inventory(); track item.product_id) {
-          <tr>
-            <td>{{ item.product_id }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.description }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.price | currency:'USD' }}</td>
-            <td>{{ item.category }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  }
 
   <!-- Mensaje cuando no hay inventario -->
   <div *ngIf="!hasProducts()" class="alert alert-info">

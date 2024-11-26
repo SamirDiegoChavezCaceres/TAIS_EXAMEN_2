@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
 import { ProductInterface } from '../interfaces/product.interface';
 
 
@@ -9,7 +8,8 @@ import { ProductInterface } from '../interfaces/product.interface';
   providedIn: 'root'
 })
 export class ProductService {
-  API_URL: string = 'https://lbgs9booc7.execute-api.us-east-1.amazonaws.com/dev/products';
+  //API_URL: string = 'https://dummyjson.com/products/';
+  API_URL: string = 'https://0f7ttojh76.execute-api.us-east-1.amazonaws.com/dev/products';
   constructor(private httpClient: HttpClient) { }
 
   getProducts(): Observable<any> {
