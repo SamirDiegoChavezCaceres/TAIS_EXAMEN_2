@@ -2,119 +2,136 @@
   <div class="container">
     <h2 class="text-center mb-4">Registrar Producto</h2>
     
+    <!-- Mensaje de error -->
+    @if (error()) {
+      <div class="alert alert-danger">
+        {{ error() }}
+      </div>
+    }
+
+    <!-- Indicador de carga -->
+    @if (isLoading()) {
+      <div class="text-center">
+        <p>Cargando... Por favor espere</p>
+      </div>
+    }
+
     <!-- Formulario de Producto -->
-    <form #productForm="ngForm" (ngSubmit)="onSubmit()" class="shadow-lg p-4 rounded">
-      
-      <!-- Campo de Código -->
-      <div class="mb-3">
-        <label for="code" class="form-label">Código</label>
-        <input
-          type="text"
-          id="code"
-          name="code"
-          class="form-control"
-          [(ngModel)]="product.code"
-          #code="ngModel"
-          required
-        />
-        <div *ngIf="code.invalid && code.touched" class="text-danger">
-          El código es obligatorio.
+    @if (!isLoading()) {
+      <form (ngSubmit)="onSubmit()" class="shadow-lg p-4 rounded">
+        
+        <!-- Campo de Código -->
+        <div class="mb-3">
+          <label for="code" class="form-label">Código</label>
+          <input
+            type="text"
+            id="code"
+            name="code"
+            class="form-control"
+            [ngModel]="product().code"
+            (ngModelChange)="updateProduct('code', $event)"
+            required
+          />
+          @if (!isCodeUnique()) {
+            <div class="text-danger">
+              El código ya está registrado
+            </div>
+          }
         </div>
-      </div>
 
-      <!-- Campo de Nombre -->
-      <div class="mb-3">
-        <label for="name" class="form-label">Nombre</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          class="form-control"
-          [(ngModel)]="product.name"
-          #name="ngModel"
-          required
-        />
-        <div *ngIf="name.invalid && name.touched" class="text-danger">
-          El nombre es obligatorio.
+        <!-- Campo de Nombre -->
+        <div class="mb-3">
+          <label for="name" class="form-label">Nombre</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="form-control"
+            [ngModel]="product().name"
+            (ngModelChange)="updateProduct('name', $event)"
+            required
+          />
         </div>
-      </div>
 
-      <!-- Campo de Descripción -->
-      <div class="mb-3">
-        <label for="description" class="form-label">Descripción</label>
-        <textarea
-          id="description"
-          name="description"
-          class="form-control"
-          [(ngModel)]="product.description"
-          #description="ngModel"
-          required
-        ></textarea>
-        <div *ngIf="description.invalid && description.touched" class="text-danger">
-          La descripción es obligatoria.
+        <!-- Campo de Descripción -->
+        <div class="mb-3">
+          <label for="description" class="form-label">Descripción</label>
+          <textarea
+            id="description"
+            name="description"
+            class="form-control"
+            [ngModel]="product().description"
+            (ngModelChange)="updateProduct('description', $event)"
+            required
+          ></textarea>
         </div>
-      </div>
 
-      <!-- Campo de Cantidad -->
-      <div class="mb-3">
-        <label for="quantity" class="form-label">Cantidad</label>
-        <input
-          type="number"
-          id="quantity"
-          name="quantity"
-          class="form-control"
-          [(ngModel)]="product.quantity"
-          #quantity="ngModel"
-          required
-        />
-        <div *ngIf="quantity.invalid && quantity.touched" class="text-danger">
-          La cantidad es obligatoria.
+        <!-- Campo de Cantidad -->
+        <div class="mb-3">
+          <label for="quantity" class="form-label">Cantidad</label>
+          <input
+            type="number"
+            id="quantity"
+            name="quantity"
+            class="form-control"
+            [ngModel]="product().quantity"
+            (ngModelChange)="updateProduct('quantity', $event)"
+            required
+          />
         </div>
-      </div>
 
-      <!-- Campo de Precio Unitario -->
-      <div class="mb-3">
-        <label for="unitPrice" class="form-label">Precio Unitario</label>
-        <input
-          type="number"
-          id="unitPrice"
-          name="unitPrice"
-          class="form-control"
-          [(ngModel)]="product.unitPrice"
-          #unitPrice="ngModel"
-          required
-        />
-        <div *ngIf="unitPrice.invalid && unitPrice.touched" class="text-danger">
-          El precio unitario es obligatorio.
+        <!-- Campo de Precio Unitario -->
+        <div class="mb-3">
+          <label for="unitPrice" class="form-label">Precio Unitario</label>
+          <input
+            type="number"
+            id="unitPrice"
+            name="unitPrice"
+            class="form-control"
+            [ngModel]="product().unitPrice"
+            (ngModelChange)="updateProduct('unitPrice', $event)"
+            required
+          />
         </div>
-      </div>
 
-      <!-- Campo de Categoría -->
-      <div class="mb-3">
-        <label for="category" class="form-label">Categoría</label>
-        <input
-          type="text"
-          id="category"
-          name="category"
-          class="form-control"
-          [(ngModel)]="product.category"
-          #category="ngModel"
-          required
-        />
-        <div *ngIf="category.invalid && category.touched" class="text-danger">
-          La categoría es obligatoria.
+        <!-- Campo de Categoría -->
+        <div class="mb-3">
+          <label for="category" class="form-label">Categoría</label>
+          <input
+            type="text"
+            id="category"
+            name="category"
+            class="form-control"
+            [ngModel]="product().category"
+            (ngModelChange)="updateProduct('category', $event)"
+            required
+          />
         </div>
-      </div>
 
-      <!-- Botón para Enviar -->
-      <div class="d-flex justify-content-between">
-        <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">
-          Registrar Producto
-        </button>
-        <button type="button" class="btn btn-secondary" (click)="onReset()">
-          Limpiar
-        </button>
-      </div>
-    </form>
+        <!-- Botones -->
+        <div class="d-flex justify-content-between">
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            [disabled]="!isCodeUnique() || 
+                       !product().code || 
+                       !product().name || 
+                       !product().description || 
+                       !product().quantity || 
+                       !product().unitPrice || 
+                       !product().category"
+          >
+            Registrar Producto
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-secondary" 
+            (click)="onReset()"
+          >
+            Limpiar
+          </button>
+        </div>
+      </form>
+    }
   </div>
 </div>
