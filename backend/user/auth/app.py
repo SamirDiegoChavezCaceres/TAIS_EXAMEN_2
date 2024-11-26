@@ -50,6 +50,7 @@ def login():
     return jsonify({'token': token})
 
 @app.route('/users/<string:user_id>')
+@jwt_required()
 def get_user(user_id):
     result = dynamodb_client.get_item(
         TableName=USERS_TABLE, Key={'userId': {'S': user_id}}

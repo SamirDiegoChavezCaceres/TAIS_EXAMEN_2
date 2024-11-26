@@ -2,6 +2,9 @@ import jwt
 import os
 
 def lambda_handler(event, context):
+    if 'headers' not in event:
+        raise ValueError("Headers not found in the event")
+
     token = event['headers'].get('Authorization')
 
     if not token:
@@ -33,3 +36,8 @@ def lambda_handler(event, context):
         raise Exception("Unauthorized: Token has expired")
     except jwt.InvalidTokenError:
         raise Exception("Unauthorized: Invalid token")
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': f'Error decoding JWT: {str(e)}'
+        }

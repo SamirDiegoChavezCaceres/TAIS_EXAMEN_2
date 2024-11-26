@@ -35,6 +35,11 @@ provider:
           Resource:
             - Fn::GetAtt: [UsersTable, Arn]
             - arn:aws:dynamodb:us-east-1:590183672359:table/employee-users-table-dev/index/UsernameIndex
+  httpApi:
+    authorizers:
+      customAuthorizer:
+        type: request
+        functionName: auth
   environment:
     USERS_TABLE: ${param:tableName}
     JWT_SECRET_KEY: fdelgadov
@@ -49,13 +54,16 @@ functions:
       - http:
           path: login
           method: POST
+          cors: true
       - http:
           path: users
           method: POST
+          cors: true
       - http:
           path: users/{userId}
           method: GET
           authorizer: auth
+          cors: true
       - http:
           path: /{proxy+}
           method: ANY
