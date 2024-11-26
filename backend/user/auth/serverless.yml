@@ -21,6 +21,7 @@ custom:
 provider:
   name: aws
   runtime: python3.12
+  stage: dev
   iam:
     role:
       statements:
@@ -36,14 +37,27 @@ provider:
             - Fn::GetAtt: [UsersTable, Arn]
   environment:
     USERS_TABLE: ${param:tableName}
+    JWT_SECRET_KEY: "fdelgadov"
 
 functions:
+  authorizer:
+    handler: authorizer.lambda_handler
   api:
     handler: wsgi_handler.handler
     events:
       - http:
-          path: /
-          method: ANY
+          path: login
+          method: POST
+          cors: true
+      - http:
+          path: users
+          method: POST
+          cors: true
+      - http:
+          path: users/{userId}
+          method: GET
+          cors: true
+          authorizer: authorizer
       - http:
           path: /{proxy+}
           method: ANY
