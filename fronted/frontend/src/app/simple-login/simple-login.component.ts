@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-simple-login',
@@ -10,18 +11,20 @@ import { FormsModule } from '@angular/forms';
 })
 export class SimpleLoginComponent {
   user = { username: '', password: '' };
-
+  constructor(private router: Router) { }
   // Simula el inicio de sesión
   onSubmit() {
+    //Validar que los datos ingresados sean correctos
     if (this.user.username && this.user.password) {
       alert(`Bienvenido, ${this.user.username}!`);
+      this.router.navigate(['/home']);
     } else {
-      alert('Por favor, completa todos los campos.');
+      alert('Usuario o contraseña incorrectos');
     }
   }
 
-  // Simula el registro
+  //Lleva a form registro
   onRegister() {
-    alert('Función de registro no implementada.');
+    this.router.navigate(['/register']);
   }
 }

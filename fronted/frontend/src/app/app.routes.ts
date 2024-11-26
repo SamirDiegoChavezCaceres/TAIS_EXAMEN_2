@@ -27,6 +27,7 @@ export const routes: Routes = [
         component: ProductFormComponent
     },
     {
-         path: '**', loadComponent: () =>  import('./not-found/not-found.component').then(comp  => comp.NotFoundComponent)
+        path: '**', 
+        loadComponent: () =>  import('./not-found/not-found.component').then(comp  => comp.NotFoundComponent)
     }
 ];

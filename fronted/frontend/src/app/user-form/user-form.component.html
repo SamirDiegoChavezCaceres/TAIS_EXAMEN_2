@@ -1,6 +1,6 @@
 <div class="full-screen">
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-      <h2>Registro de usuario</h2>
+      <h2>Registro</h2>
       <p></p>
       <div class="mb-3">
         <label for="username" class="form-label">Correo</label>
@@ -36,7 +36,7 @@
         />
       </div>
       <div class="d-flex justify-content-between">
-        <button type="button" class="btn btn-secondary" (click)="onRegister()">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">
           Cancelar
         </button>
         <button type="submit" class="btn btn-primary" [disabled]="!loginForm.valid">

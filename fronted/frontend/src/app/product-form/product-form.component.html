@@ -92,19 +92,15 @@
       <!-- Campo de Categoría -->
       <div class="mb-3">
         <label for="category" class="form-label">Categoría</label>
-        <select
+        <input
+          type="text"
           id="category"
           name="category"
-          class="form-select"
+          class="form-control"
           [(ngModel)]="product.category"
           #category="ngModel"
           required
-        >
-          <option value="" disabled>Seleccione una categoría</option>
-          <option value="electronics">Electrónica</option>
-          <option value="furniture">Muebles</option>
-          <option value="clothing">Ropa</option>
-        </select>
+        />
         <div *ngIf="category.invalid && category.touched" class="text-danger">
           La categoría es obligatoria.
         </div>
