@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   imports: [FormsModule]
 })
 export class UserFormComponent {
-  user = { email: '', username: '', password: '' };
+  user = { userId: "", username: '', password: '' };
   constructor(private router: Router) { }
   validRegister: boolean = false;
   
@@ -18,7 +18,7 @@ export class UserFormComponent {
   onSubmit() {
     
     //Validar que el usuario no exista
-    if (this.user.email && this.user.username && this.user.password) {
+    if (this.user.username && this.user.password) {
       this.router.navigate(['/login']);
       //registrar al usuario
       alert(`Usuario registrado, ${this.user.username}!`);

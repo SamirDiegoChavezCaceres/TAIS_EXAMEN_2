@@ -34,7 +34,6 @@ def get_user(user_id):
             'userId': item.get('userId').get('S'),
             'name': item.get('name').get('S'),
             "password": item.get('password').get('S'),
-            "email": item.get('email').get('S')
         }
     )
 
@@ -49,7 +48,6 @@ def get_all_users():
                     'userId': item.get('userId').get('S'),
                     'name': item.get('name').get('S'),
                     "password": item.get('password').get('S'),
-                    "email": item.get('email').get('S')
                 } for item in items
             ]
         }

@@ -24,56 +24,24 @@ def create_user():
     user_id = request.json.get('userId')
     name = request.json.get('name')
     password = request.json.get('password')
-    email = request.json.get('email')
     if not user_id or not name:
         return jsonify({'error': 'Please provide both "userId" and "name"'}), 400
+    item = dynamodb_client.get_item(
+        TableName=USERS_TABLE, Key={'userId': {'S': user_id}}
+    )
+    if item:
+        return jsonify({'error': 'User with provided "userId" already exists'}), 409
 
     dynamodb_client.put_item(
         TableName=USERS_TABLE,
         Item={
             'userId': {'S': user_id}, 
             'name': {'S': name},
-            "password": {'S': password},
-            "email": {'S': email}
+            "password": {'S': password}
         }
     )
 
-    return jsonify({'userId': user_id, 'name': name, 'password': password, 'email': email})
-
-# @app.route('/users/<string:user_id>')
-# def get_user(user_id):
-#     result = dynamodb_client.get_item(
-#         TableName=USERS_TABLE, Key={'userId': {'S': user_id}}
-#     )
-#     item = result.get('Item')
-#     if not item:
-#         return jsonify({'error': 'Could not find user with provided "userId"'}), 404
-
-#     return jsonify(
-#         {
-#             'userId': item.get('userId').get('S'),
-#             'name': item.get('name').get('S'),
-#             "password": item.get('password').get('S'),
-#             "email": item.get('email').get('S')
-#         }
-#     )
-
-# @app.route("/users", methods=["GET"])
-# def get_all_users():
-#     result = dynamodb_client.scan(TableName=USERS_TABLE)
-#     items = result.get('Items')
-#     return jsonify(
-#         {
-#             'users': [
-#                 {
-#                     'userId': item.get('userId').get('S'),
-#                     'name': item.get('name').get('S'),
-#                     "password": item.get('password').get('S'),
-#                     "email": item.get('email').get('S')
-#                 } for item in items
-#             ]
-#         }
-#     )
+    return jsonify({'userId': user_id, 'name': name, 'password': password})
 
 @app.errorhandler(404)
 def resource_not_found(e):
