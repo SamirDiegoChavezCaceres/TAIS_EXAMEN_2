@@ -10,4 +10,5 @@ Links relacionados al proyecto:
 - Link de github: https://github.com/SamirDiegoChavezCaceres/TAIS_EXAMEN_2
 - Documentación del proyecto: https://docs.google.com/document/d/1ik0SiyxpfwOdbSEEGzaQFu3Id_K_tmDCY631SdM91hM/edit?tab=t.0
 - Link para ir directamente al manual de usuario: https://docs.google.com/document/d/1ik0SiyxpfwOdbSEEGzaQFu3Id_K_tmDCY631SdM91hM/edit?tab=t.0#heading=h.qs4csfkrpy17
-- Link del video de presentación: https://youtu.be/L3EAH9d-THY 
+- Link del video de presentación: https://youtu.be/L3EAH9d-THY
+- Link de la aplicacion desplegada en s3 bucket: http://frontend-tais.s3-website-us-east-1.amazonaws.com/login 
