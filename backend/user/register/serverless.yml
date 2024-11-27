@@ -28,6 +28,9 @@ provider:
   runtime: python3.12
   stage: dev
   region: us-east-1
+  apiGateway:
+    restApiId: 7wygl76pj7  # ID del API Gateway existente
+    restApiRootResourceId: chxx1tel1f  # ID del recurso raíz en el API Gateway
   iam:
     role:
       statements:
@@ -40,7 +43,7 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - Fn::GetAtt: [UsersTable, Arn]
+            - arn:aws:dynamodb:${self:provider.region}:*:table/users-table-${self:provider.stage}
             - "*"
   environment:
     USERS_TABLE: ${param:tableUsersName}
