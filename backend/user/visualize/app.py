@@ -50,7 +50,7 @@ def get_all_users():
             'users': [
                 {
                     'userId': item.get('userId').get('S'),
-                    'name': item.get('name').get('S'),
+                    'username': item.get('username').get('S'),
                     "password": item.get('password').get('S'),
                 } for item in items
             ]
