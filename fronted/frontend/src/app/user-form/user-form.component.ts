@@ -13,7 +13,7 @@ import { UserService } from '../services/user.service';
 })
 export class UserFormComponent {
 
-  user: UserInterface = { userId: "", name: '', password: '' };
+  user: UserInterface = { userId: "", username: '', password: '' };
   constructor(private userService: UserService, private router: Router) { }
 
   isLoading: boolean = false;
