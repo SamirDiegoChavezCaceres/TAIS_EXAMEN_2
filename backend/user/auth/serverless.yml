@@ -1,5 +1,5 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
-org: taisgrupo6unsa
+org: fdelgadov
 # "app" enables Serverless Framework Dashboard features and sharing them with other Services.
 app: taisgrupo6examen2
 # "service" is the name of this project. This will also be added to your AWS resource names.
@@ -25,9 +25,8 @@ custom:
 provider:
   name: aws
   runtime: python3.12
-  apiName: ${self:provider.stage}-user-${self:service}-api
-  stage: dev
   region: us-east-1
+  stage: dev
   iam:
     role:
       statements:
@@ -40,15 +39,63 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - arn:aws:dynamodb:${self:provider.region}:*:table/users-table-${self:provider.stage}
+            - Fn::GetAtt: [UsersTable, Arn]
+            - arn:aws:dynamodb:${self:provider.region}:*:table/users-table-${self:provider.stage}/index/UsernameIndex
   environment:
     USERS_TABLE: ${param:tableName}
+    JWT_SECRET_KEY: fdelgadov
 
 functions:
-  authUser:
+  auth:
+    handler: authorizer.lambda_handler
+
+  api:
     handler: wsgi_handler.handler
     events:
       - http:
-          path: /users
+          path: login
           method: POST
           cors: true
+      - http:
+          path: users
+          method: POST
+          cors: true
+      - http:
+          path: users/{userId}
+          method: GET
+          cors: true
+          authorizer:
+            name: auth
+            type: request
+            identitySource: method.request.header.Authorization
+      - http:
+          path: /{proxy+}
+          method: ANY
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: username
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: UsernameIndex
+            KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${param:tableName}
