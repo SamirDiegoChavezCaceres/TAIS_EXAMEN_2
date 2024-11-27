@@ -24,7 +24,6 @@ custom:
 
 provider:
   name: aws
-  apiName: users-api
   runtime: python3.12
   stage: dev
   region: us-east-1
@@ -47,36 +46,13 @@ provider:
             - "*"
   environment:
     USERS_TABLE: ${param:tableUsersName}
+    JWT_SECRET_KEY: fdelgadov
 
 functions:
   createUser:
     handler: wsgi_handler.handler
     events:
       - http:
-          path: /users
+          path: /users-create
           method: POST
           cors: true
-
-resources:
-  Resources:
-    UsersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: userId
-            AttributeType: S
-        KeySchema:
-          - AttributeName: userId
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${param:tableUsersName}
-    GatewayResponseDefault4XX:
-      Type: AWS::ApiGateway::GatewayResponse
-      Properties:
-        ResponseParameters:
-          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-        ResponseType: DEFAULT_4XX
-        RestApiId:
-          Ref: ApiGatewayRestApi

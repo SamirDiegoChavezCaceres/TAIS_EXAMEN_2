@@ -22,7 +22,7 @@ if os.environ.get('IS_OFFLINE'):
 USERS_TABLE = os.environ['USERS_TABLE']
 
 
-@app.route('/user/<string:user_id>')
+@app.route('/users/<string:user_id>')
 @jwt_required()
 def get_user(user_id):
     result = dynamodb_client.get_item(
@@ -40,7 +40,7 @@ def get_user(user_id):
         },
     )
 
-@app.route("/all-users", methods=["GET"])
+@app.route("/users", methods=["GET"])
 @jwt_required()
 def get_all_users():
     result = dynamodb_client.scan(TableName=USERS_TABLE)

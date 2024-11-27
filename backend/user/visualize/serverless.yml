@@ -53,7 +53,7 @@ functions:
     handler: wsgi_handler.handler
     events:
       - http:
-          path: /user/{proxy+}
+          path: /users/{proxy+}
           method: GET
           cors: true
           authorizer:
@@ -67,7 +67,7 @@ functions:
     handler: wsgi_handler.handler
     events:
       - http: 
-          path: /all-users
+          path: /users
           method: GET
           cors: true
           authorizer:
