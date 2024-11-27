@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserInterface } from '../interfaces/user.interface';
 import { UserService } from '../services/user.service';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-user-form',
@@ -20,6 +21,7 @@ export class UserFormComponent {
  
   //Validamos el registro
   onSubmit() {
+    this.user.userId = CryptoJS.SHA256(this.user.username).toString(CryptoJS.enc.Hex);
     this.isLoading = true;
     //Validar que el usuario no exista
     this.userService.addUser(this.user).subscribe({
