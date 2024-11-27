@@ -21,6 +21,8 @@ custom:
 provider:
   name: aws
   runtime: python3.12
+  region: us-east-1
+  stage: dev
   iam:
     role:
       statements:
@@ -34,12 +36,8 @@ provider:
             - dynamodb:DeleteItem
           Resource:
             - Fn::GetAtt: [UsersTable, Arn]
-            - arn:aws:dynamodb:us-east-1:590183672359:table/employee-users-table-dev/index/UsernameIndex
-  httpApi:
-    authorizers:
-      customAuthorizer:
-        type: request
-        functionName: auth
+            #- arn:aws:dynamodb:us-east-1:590183672359:table/employee-users-table-dev/index/UsernameIndex
+            - arn:aws:dynamodb:${self:provider.region}:*:table/employee-users-table-${self:provider.stage}/index/UsernameIndex
   environment:
     USERS_TABLE: ${param:tableName}
     JWT_SECRET_KEY: fdelgadov
@@ -62,8 +60,11 @@ functions:
       - http:
           path: users/{userId}
           method: GET
-          authorizer: auth
           cors: true
+          authorizer:
+            name: auth
+            type: request
+            identitySource: method.request.header.Authorization
       - http:
           path: /{proxy+}
           method: ANY

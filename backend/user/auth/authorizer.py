@@ -1,5 +1,6 @@
 import jwt
 import os
+import json
 
 def lambda_handler(event, context):
     if 'headers' not in event:
@@ -19,8 +20,8 @@ def lambda_handler(event, context):
         decoded = jwt.decode(token, os.environ['JWT_SECRET_KEY'], algorithms=['HS256'])
         
         # Retornar un policy document con el acceso permitido si el token es válido
-        return {
-            'principalId': decoded['identity'],  # El usuario autenticado
+        response = {
+            'principalId': decoded['sub'],  # El usuario autenticado
             'policyDocument': {
                 'Version': '2012-10-17',
                 'Statement': [
@@ -32,6 +33,7 @@ def lambda_handler(event, context):
                 ]
             }
         }
+        return response
     except jwt.ExpiredSignatureError:
         raise Exception("Unauthorized: Token has expired")
     except jwt.InvalidTokenError:
