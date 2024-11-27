@@ -6,13 +6,14 @@ import boto3
 import json
 from flask import Flask, jsonify, make_response, request
 from flask_cors import CORS, cross_origin
-
+from flask_jwt_extended import  jwt_required
 
 app = Flask(__name__)
 CORS(app) # allow CORS for all domains on all routes.
 
 dynamodb_client = boto3.client('dynamodb')
 lambda_client = boto3.client('lambda')
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'your_jwt_secret')  # Cambia por una clave segura
 
 def invoke_lambda(product_id):
     """ Invoke the lambda function
@@ -48,6 +49,7 @@ else:
 PRODUCTS_TABLE = os.environ['PRODUCTS_TABLE']
 
 @app.route('/products', methods=['POST'])
+@jwt_required()
 def create_products():
     """ Create a new product
     @return: JSON object with the product created

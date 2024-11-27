@@ -4,13 +4,14 @@
 import os
 import boto3
 from flask import Flask, jsonify, make_response, request
-
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 CORS(app) # allow CORS for all domains on all routes.
 dynamodb_client = boto3.client('dynamodb')
-
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'your_jwt_secret')  # Cambia por una clave segura
+jwt = JWTManager(app)
 
 
 if os.environ.get('IS_OFFLINE'):
@@ -23,6 +24,7 @@ else:
 PRODUCTS_TABLE = os.environ['PRODUCTS_TABLE']
 
 @app.route('/products/<string:product_id>')
+@jwt_required()
 def get_products(product_id):
     """ Get a product by product_id
     @return: JSON object with the product
@@ -47,6 +49,7 @@ def get_products(product_id):
     )
 
 @app.route('/products')
+@jwt_required()
 def get_all_products():
     """ Get all products in the database"""
     result = dynamodb_client.scan(TableName=PRODUCTS_TABLE)

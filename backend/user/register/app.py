@@ -22,27 +22,43 @@ USERS_TABLE = os.environ['USERS_TABLE']
 
 @app.route('/users', methods=['POST'])
 def create_user():
-    name = request.json.get('name')
+    user_id = request.json.get('userId')
+    username = request.json.get('username')
     password = request.json.get('password')
-    user_id = hashlib.sha256(name.encode()).hexdigest()
-    if not password or not name:
-        return jsonify({'error': 'Please provide both "name" and "password"'}), 400
-    item = dynamodb_client.get_item(
-        TableName=USERS_TABLE, Key={'userId': {'S': user_id}}
+    if not user_id or not username or not password:
+        return jsonify({'error': 'Please provide "userId" | "name" | "password"'}), 400
+
+    # Verificar si el userId ya existe
+    user_id_response = dynamodb_client.get_item(
+        TableName=USERS_TABLE,
+        Key={'userId': {'S': user_id}}
     )
-    if 'Item' in item:
-        return jsonify({'error': 'User with provided "name" already exists (same hash id)'}), 409
+    if 'Item' in user_id_response:
+        return jsonify({'error': 'User ID already exists'}), 400
+
+    # Verificar si el username ya existe
+    username_response = dynamodb_client.scan(
+        TableName=USERS_TABLE,
+        FilterExpression="username = :username",
+        ExpressionAttributeValues={":username": {"S": username}}
+    )
+    if username_response.get('Items'):  # Si encuentra algún resultado, significa que el username ya existe
+        return jsonify({'error': 'Username already exists'}), 400
 
     dynamodb_client.put_item(
         TableName=USERS_TABLE,
         Item={
-            'userId': {'S': user_id}, 
-            'name': {'S': name},
-            "password": {'S': password}
-        }
+            'userId': {'S': user_id},
+            'username': {'S': username},
+            'password': {'S': password}
+            }
     )
 
-    return jsonify({'userId': user_id, 'name': name, 'password': password, "item": item}), 201
+    return jsonify({
+        'userId': user_id,
+        'username': username,
+        'password': password
+        })
 
 @app.errorhandler(404)
 def resource_not_found(e):

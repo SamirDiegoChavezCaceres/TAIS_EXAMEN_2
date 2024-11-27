@@ -28,6 +28,9 @@ provider:
   stage: dev
   apiName: ${self:provider.stage}-product-${self:service}-api
   region: us-east-1
+  apiGateway:
+    restApiId: 7wygl76pj7  # ID del API Gateway existente
+    restApiRootResourceId: chxx1tel1f  # ID del recurso raíz en el API Gateway
   iam:
     role:
       statements:
@@ -40,6 +43,7 @@ provider:
             - arn:aws:dynamodb:${self:provider.region}:*:table/products-table-${self:provider.stage}
   environment:
     PRODUCTS_TABLE: ${param:tableName}
+    JWT_SECRET_KEY: fdelgadov
 
 functions:
   getProduct:
@@ -49,6 +53,12 @@ functions:
           path: /products/{proxy+}
           method: GET
           cors: true
+          authorizer:
+            name: auth-visualize-product
+            arn:
+              - arn:aws:lambda:${self:provider.region}:*:function:auth-dev-auth
+            type: request
+            identitySource: method.request.header.Authorization
   getAllProducts:
     handler: wsgi_handler.handler
     events:
@@ -56,3 +66,9 @@ functions:
           path: /products
           method: GET
           cors: true
+          authorizer:
+            name: auth-visualize-products
+            arn:
+              - arn:aws:lambda:${self:provider.region}:*:function:auth-dev-auth
+            type: request
+            identitySource: method.request.header.Authorization

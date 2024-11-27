@@ -2,7 +2,7 @@ import os
 
 import boto3
 from flask import Flask, jsonify, make_response, request
-
+from flask_jwt_extended import  jwt_required
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
@@ -21,6 +21,7 @@ USERS_TABLE = os.environ['USERS_TABLE']
 
 
 @app.route('/users/<string:user_id>')
+@jwt_required()
 def get_user(user_id):
     result = dynamodb_client.get_item(
         TableName=USERS_TABLE, Key={'userId': {'S': user_id}}
@@ -32,9 +33,9 @@ def get_user(user_id):
     return jsonify(
         {
             'userId': item.get('userId').get('S'),
-            'name': item.get('name').get('S'),
-            "password": item.get('password').get('S'),
-        }
+            'username': item.get('username').get('S'),
+            'password': item.get('password').get('S')
+        },
     )
 
 @app.route("/users", methods=["GET"])

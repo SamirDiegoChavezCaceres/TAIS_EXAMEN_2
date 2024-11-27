@@ -3,7 +3,6 @@ import os
 import boto3
 from flask import Flask, jsonify, make_response, request
 from flask_cors import CORS, cross_origin
-
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import jwt
 
