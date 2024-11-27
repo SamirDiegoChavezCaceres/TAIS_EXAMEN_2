@@ -1,0 +1,10 @@
+
+
+/* revisar */
+:root {
+    --primary-color: #b0d0bb; /* Color principal */
+    --secondary-color: #758f9c; /* Color de texto y bordes */
+    --header-bg-color: #b2d5db; /* Fondo del encabezado */
+    --row-bg-color: #d9e7e8; /* Fondo de las filas alternas */
+    --table-bg-color: #fafaf0; /* Fondo general */
+  }

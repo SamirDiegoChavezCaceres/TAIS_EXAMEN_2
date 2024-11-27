@@ -1,0 +1,13 @@
+/* Si deseas personalizar el botón más allá de Bootstrap */
+button {
+    font-size: 16px; /* Tamaño de la fuente del botón */
+    padding: 10px 20px; /* Relleno dentro del botón */
+    border-radius: 8px; /* Bordes redondeados del botón */
+    background-color: var(--primary-color); /* Color de fondo personalizado  */
+    color: white; /* Color del texto */
+  }
+  
+  button:hover {
+    background-color: #758f9c; /* Color de fondo cuando el botón se pasa por encima */
+  }
+  
