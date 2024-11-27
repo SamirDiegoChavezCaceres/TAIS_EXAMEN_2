@@ -1,0 +1,36 @@
+  /* Contenedor del mensaje de error */
+  .error-message {
+    max-width: 500px; /* Max ancho para el contenedor */
+    width: 100%; /* Asegura que no se desborde */
+    background: var(--primary-color); /* Fondo con color principal */
+    padding: 40px; /* Padding más grande */
+    border-radius: 12px; /* Bordes redondeados */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra más suave */
+    background: linear-gradient(145deg, var(--primary-color), var(--row-bg-color)); /* Gradiente con colores de la app */
+  }
+  
+  /* Estilo del texto de error */
+  .error-message p {
+    color: var(--error-color); /* Usamos el color rojo para los mensajes de error */
+    font-size: 20px; /* Tamaño de fuente más grande */
+    font-weight: 600; /* Fuente más gruesa */
+    line-height: 1.5;
+  }
+  
+  /* Animación de desvanecimiento */
+  .error-message {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  /* Animación de desvanecimiento */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

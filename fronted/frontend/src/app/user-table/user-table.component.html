@@ -1,0 +1,29 @@
+<div class="container mt-5">
+    <h1 class="text-center">Listado</h1>
+  
+    <!-- Tabla de inventario -->
+    <table *ngIf="hasUsers()" class="table table-bordered table-hover inventory-table">
+      <thead class="thead-dark">
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of userList; track $index) {
+        <tr>
+          <td>{{ item.userId | slice:0:8 }}</td>
+          <td>{{ item.name }}</td>
+        </tr>
+      }
+      </tbody>
+    </table>
+  
+    <!-- Mensaje cuando no hay inventario -->
+    <div *ngIf="!hasUsers()" class="alert alert-info">
+      No hay elementos en el listado.
+    </div>
+    <div>
+        <button class="btn btn-primary position-absolute top-0 end-5 mt-4 me-4" (click)="handleHome()">Home</button>
+    </div> 
+  </div>

@@ -2,11 +2,13 @@ import os
 
 import boto3
 from flask import Flask, jsonify, make_response, request
+from flask_cors import CORS, cross_origin
+
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import jwt
 
 app = Flask(__name__)
-
+CORS(app) # allow CORS for all domains on all routes.
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'your_jwt_secret')  # Cambia por una clave segura
 jwt = JWTManager(app)
 
@@ -65,7 +67,6 @@ def get_user(user_id):
             'username': item.get('username').get('S'),
             'password': item.get('password').get('S')
         },
-
     )
 
 @app.route('/users', methods=['POST'])

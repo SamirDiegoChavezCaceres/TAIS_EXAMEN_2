@@ -1,0 +1,90 @@
+
+<div class="full-screen" style="margin-bottom: 100px;">
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">Registrar Producto</h2>
+    
+    <!-- Formulario -->
+    <form (ngSubmit)="onSubmit()" #productForm="ngForm" class="shadow-lg p-4 rounded">
+      <div class="mb-3">
+        <label for="product_id" class="form-label">ID del Producto</label>
+        <input
+          id="product_id"
+          type="text"
+          class="form-control"
+          [(ngModel)]="product.product_id"
+          name="product_id"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="name" class="form-label">Nombre</label>
+        <input
+          id="name"
+          type="text"
+          class="form-control"
+          [(ngModel)]="product.name"
+          name="name"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Descripción</label>
+        <textarea
+          id="description"
+          class="form-control"
+          [(ngModel)]="product.description"
+          name="description"
+        ></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="quantity" class="form-label">Cantidad</label>
+        <input
+          id="quantity"
+          type="number"
+          class="form-control"
+          [(ngModel)]="product.quantity"
+          name="quantity"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="price" class="form-label">Precio</label>
+        <input
+          id="price"
+          type="number"
+          class="form-control"
+          [(ngModel)]="product.price"
+          name="price"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="category" class="form-label">Categoría</label>
+        <input
+          id="category"
+          type="text"
+          class="form-control"
+          [(ngModel)]="product.category"
+          name="category"
+        />
+      </div>
+      <div class="d-flex justify-content-between">
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          [disabled]="!productForm.valid">
+          Registrar
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="onReset()">
+          Limpiar
+        </button>
+        <div>
+          <button class="btn btn-secondary" (click)="handleHome()">Cancelar</button>
+        </div> 
+      </div>
+    </form>
+  </div>  
+</div>

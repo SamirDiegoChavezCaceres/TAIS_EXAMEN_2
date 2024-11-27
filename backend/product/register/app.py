@@ -5,9 +5,11 @@ import os
 import boto3
 import json
 from flask import Flask, jsonify, make_response, request
+from flask_cors import CORS, cross_origin
 
 
 app = Flask(__name__)
+CORS(app) # allow CORS for all domains on all routes.
 
 dynamodb_client = boto3.client('dynamodb')
 lambda_client = boto3.client('lambda')
@@ -66,10 +68,10 @@ def create_products():
     body_dict = json.loads(validation_response.get('body'))
 
     if validation_response == 0:
-        return jsonify({'error': body_dict}), 400
+        return jsonify({'error': body_dict["message"]}), 400
 
     if validation_response.get('statusCode') != 200:
-        return jsonify({'error': body_dict}), validation_response.get('statusCode')
+        return jsonify({'error': body_dict["message"]}), validation_response.get('statusCode')
 
     dynamodb_client.put_item(
         TableName=PRODUCTS_TABLE,
