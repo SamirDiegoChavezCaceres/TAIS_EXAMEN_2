@@ -15,12 +15,19 @@ plugins:
   - serverless-python-requirements
 
 custom:
+  tableName: 'users-table-${self:provider.stage}'
   wsgi:
     app: app.app
+    packRequirements: false
+  pythonRequirements:
+    dockerizePip: non-linux
 
 provider:
   name: aws
   runtime: python3.12
+  apiName: ${self:provider.stage}-user-${self:service}-api
+  stage: dev
+  region: us-east-1
   iam:
     role:
       statements:
@@ -33,33 +40,15 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - Fn::GetAtt: [UsersTable, Arn]
+            - arn:aws:dynamodb:${self:provider.region}:*:table/users-table-${self:provider.stage}
   environment:
     USERS_TABLE: ${param:tableName}
 
 functions:
-  api:
+  authUser:
     handler: wsgi_handler.handler
     events:
       - http:
-          path: /
-          method: ANY
-      - http:
-          path: /{proxy+}
-          method: ANY
-
-resources:
-  Resources:
-    UsersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: userId
-            AttributeType: S
-        KeySchema:
-          - AttributeName: userId
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${param:tableName}
+          path: /users
+          method: POST
+          cors: true
