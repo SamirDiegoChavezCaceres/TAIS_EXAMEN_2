@@ -35,10 +35,12 @@ export const routes: Routes = [
         path: "home/listarUsuarios",
         component: UserTableComponent,
         canActivate: [AuthGuardService]
-    },
+    }
+    ,
     {
         path: '**', 
-        loadComponent: () =>  import('./not-found/not-found.component').then(comp  => comp.NotFoundComponent)
+        // loadComponent: () =>  import('./not-found/not-found.component').then(comp  => comp.NotFoundComponent)
+        redirectTo: 'login'
     }
 ];
 
