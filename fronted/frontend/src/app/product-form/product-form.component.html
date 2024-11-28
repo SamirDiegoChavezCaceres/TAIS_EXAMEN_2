@@ -14,7 +14,11 @@
           [(ngModel)]="product.product_id"
           name="product_id"
           required
-        />
+          #product_id="ngModel"
+          />
+          <div *ngIf="product_id.invalid && product_id.touched" class="error-message">
+            <span *ngIf="product_id.errors?.['required']">El ID del producto es obligatorio.</span>
+          </div>
       </div>
       <div class="mb-3">
         <label for="name" class="form-label">Nombre</label>
@@ -25,7 +29,15 @@
           [(ngModel)]="product.name"
           name="name"
           required
-        />
+          minlength="3"
+            maxlength="50"
+            #name="ngModel"
+          />
+          <div *ngIf="name.invalid && name.touched" class="error-message">
+            <span *ngIf="name.errors?.['required']">El Nombre es obligatorio.</span>
+            <span *ngIf="name.errors?.['minlength']">El Nombre debe contener mas de 3 caracteres.</span>
+            <span *ngIf="name.errors?.['maxlength']">El Nombre debe contener menos de 50 caracteres.</span>
+          </div>
       </div>
       <div class="mb-3">
         <label for="description" class="form-label">Descripción</label>
@@ -35,7 +47,11 @@
           [(ngModel)]="product.description"
           name="description"
           required
-        ></textarea>
+          #description="ngModel"
+          ></textarea>
+          <div *ngIf="description.invalid && description.touched" class="error-message">
+            <span *ngIf="description.errors?.['required']">La Descripción es obligatoria.</span>
+          </div>
       </div>
       <div class="mb-3">
         <label for="quantity" class="form-label">Cantidad</label>
@@ -46,7 +62,15 @@
           [(ngModel)]="product.quantity"
           name="quantity"
           required
-        />
+          pattern="^[0-9]+$"
+          min="1"
+          #quantity="ngModel"  
+          />
+          <div *ngIf="quantity.invalid && quantity.touched" class="error-message">
+            <span *ngIf="quantity.errors?.['required']">La cantidad es obligatoria.</span>
+            <span *ngIf="quantity.errors?.['min']">La cantidad debe ser mayor o igual a 1.</span>
+            <span *ngIf="quantity.errors?.['pattern']">La cantidad debe ser un numero entero.</span>
+          </div>        
       </div>
       <div class="mb-3">
         <label for="price" class="form-label">Precio</label>
@@ -57,7 +81,13 @@
           [(ngModel)]="product.price"
           name="price"
           required
-        />
+          min="1"
+          #price="ngModel"  
+          />
+          <div *ngIf="price.invalid && price.touched" class="error-message">
+            <span *ngIf="price.errors?.['required']">El precio es obligatorio.</span>
+            <span *ngIf="price.errors?.['min']">El precio debe ser mayor o igual a 1.</span>
+          </div>
       </div>
       <div class="mb-3">
         <label for="category" class="form-label">Categoría</label>
@@ -68,7 +98,11 @@
           [(ngModel)]="product.category"
           name="category"
           required
-        />
+          #category="ngModel"
+          />
+          <div *ngIf="category.invalid && category.touched" class="error-message">
+            <span *ngIf="category.errors?.['required']">La Categoría es obligatoria.</span>
+          </div>
       </div>
       <div class="d-flex justify-content-between">
         <button 

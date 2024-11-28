@@ -19,6 +19,13 @@ export class UserFormComponent {
 
   isLoading: boolean = false;
  
+  //logica del boton para mostrar contraseña
+  isPasswordVisible = false; // Variable para controlar la visibilidad de la contraseña
+  // Método para alternar la visibilidad de la contraseña
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
+  
   //Validamos el registro
   onSubmit() {
     this.user.userId = CryptoJS.SHA256(this.user.username).toString(CryptoJS.enc.Hex);

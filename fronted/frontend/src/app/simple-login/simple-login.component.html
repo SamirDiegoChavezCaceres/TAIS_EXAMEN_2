@@ -22,13 +22,16 @@
       <div class="mb-3">
         <label for="password" class="form-label">Contraseña</label>
         <input
-          type="password"
+          [type]="isPasswordVisible ? 'text' : 'password'"
           id="password"
           name="password"
           class="form-control"
           [(ngModel)]="user.password"
           required
         />
+        <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()">
+          <i [class]="isPasswordVisible ? 'bi bi-eye-slash' : 'bi bi-eye'"></i> <!-- Cambia el ícono -->
+        </button>
       </div>
 
       <!-- Botones -->

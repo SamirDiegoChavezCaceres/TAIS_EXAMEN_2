@@ -21,6 +21,13 @@ export class SimpleLoginComponent implements OnInit {
       this.router.navigate(['/home'])
   }
 
+  //logica del boton para mostrar contraseña
+  isPasswordVisible = false; // Variable para controlar la visibilidad de la contraseña
+  // Método para alternar la visibilidad de la contraseña
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  } 
+
   // Simula el inicio de sesión
   onSubmit() {
     //Validar que los datos ingresados sean correctos
